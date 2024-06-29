@@ -4,17 +4,20 @@ import com.google.code.kaptcha.Producer;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.utils.CommunityConstant;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
@@ -32,6 +35,9 @@ public class LoginController implements CommunityConstant {
     private Producer kaptchaProducer;
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     @GetMapping("/register")
     public String getRegisterPage() {
@@ -96,6 +102,50 @@ public class LoginController implements CommunityConstant {
         } catch (IOException e) {
             logger.error("响应验证码失败：" + e.getMessage());
         }
+    }
 
+    /*
+     * @param username: 用户名
+     * @param password: 密码
+     * @param code: 验证码
+     * @param rememberme: 是否记住用户
+     * @param model: 视图模型，负责显示处理后的页面数据
+     * @param session: 存储生成的登录凭证
+     * @param response: 返回cookie给浏览器
+     * @return String
+     * @date 2024/6/28 21:07
+     */
+    @PostMapping("/login")
+    public String login(String username, String password, String code, boolean rememberme,
+                        Model model, HttpSession session, HttpServletResponse response) {
+        // 1.检查验证码
+        String kaptcha = (String) session.getAttribute("kaptcha");
+        if (StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code) || !code.equalsIgnoreCase(kaptcha)) {
+            model.addAttribute("codeMsg", "验证码不正确！");
+            return "/site/login";
+        }
+
+        // 2.检查用户名和密码
+        // 是否记住，记住则增加的登录凭证存在的时间
+        int expiredSeconds = rememberme ? REMEMBER_EXPIRED_SECONDS : DEFAULT_EXPIRED_SECONDS;
+        Map<String, Object> map = userService.login(username, password, expiredSeconds);
+        if (map.containsKey("ticket")) { // 存在ticket，则将其存入到cookie中
+            Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
+            cookie.setPath(contextPath);
+            cookie.setMaxAge(expiredSeconds);
+            response.addCookie(cookie);
+            // 登录成功，回到首页
+            return "redirect:/index";
+        } else { // 否则，回到当前页面
+            model.addAttribute("usernameMsg", map.get("usernameMsg"));
+            model.addAttribute("passwordMsg", map.get("passwordMsg"));
+            return "/site/login";
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(@CookieValue("ticket") String ticket) {
+        userService.logout(ticket); // 登出
+        return "redirect:/login"; // 重定向到登录界面
     }
 }
