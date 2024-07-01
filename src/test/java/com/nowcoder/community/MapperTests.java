@@ -105,6 +105,7 @@ public class MapperTests {
     @Test
     public void testPassword() {
         User user = userMapper.selectByName("tom");
+        System.out.println(user.getPassword());
         System.out.println(CommunityUtil.md5("123" + user.getSalt()));
     }
 }

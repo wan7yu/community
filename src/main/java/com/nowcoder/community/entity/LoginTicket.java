@@ -1,18 +1,18 @@
 package com.nowcoder.community.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Data
 public class LoginTicket {
-    private Integer id;
-    private Integer userId;
+    private int id;
+    private int userId;
     private String ticket;
-    private Integer status;
+    private int status;
     private Date expired;
 }
