@@ -4,6 +4,7 @@ import com.nowcoder.community.entity.Message;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface MessageMapper {
@@ -22,4 +23,10 @@ public interface MessageMapper {
 
     // 查询未读私信数量
     int selectLetterUnreadCount(int userId, String conversationId);
+
+    // 新增消息
+    int insertMessage(Message message);
+
+    // 更新未读消息为已读
+    int updateStatus(List<Integer> ids, int status);
 }
