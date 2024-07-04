@@ -2,6 +2,7 @@ package com.nowcoder.community.controller;
 
 import com.nowcoder.community.annotation.LoginRequired;
 import com.nowcoder.community.entity.User;
+import com.nowcoder.community.service.LikeService;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.utils.CommunityUtil;
 import com.nowcoder.community.utils.HostHolder;
@@ -42,6 +43,8 @@ public class UserController {
     // 注入业务层和获取用户信息类
     @Autowired
     private UserService userService;
+    @Autowired
+    private LikeService likeService;
     @Autowired
     private HostHolder hostHolder;
 
@@ -124,7 +127,7 @@ public class UserController {
     @LoginRequired
     @PostMapping("/update")
     public String updatePassword(String password, String newPassword,
-                                     String confirm, Model model) {
+                                 String confirm, Model model) {
         // 1.拿到当前用户
         User user = hostHolder.getUser();
         // 2.检查密码格式以及是否正确
@@ -145,7 +148,7 @@ public class UserController {
             return "/site/setting";
         }
 
-        newPassword = CommunityUtil.md5(newPassword +user.getSalt());
+        newPassword = CommunityUtil.md5(newPassword + user.getSalt());
         // 4.检查输入密码跟原密码是否相同
         if (user.getPassword().equals(newPassword)) {
             model.addAttribute("passwordMsg", "输入密码与原密码相同，请重新输入！");
@@ -155,5 +158,22 @@ public class UserController {
         // 5.更新密码
         userService.updateUserPassword(user.getId(), newPassword);
         return "redirect:/index";
+    }
+
+    // 个人主页
+    @GetMapping("/profile/{userId}")
+    public String getProfilePage(@PathVariable("userId") int userId, Model model) {
+        // 查询到当前用户
+        User user = userService.findUserById(userId);
+        if (user == null) throw new RuntimeException("该用户不存在！");
+
+        // 在模型中加入用户
+        model.addAttribute("user", user);
+
+        // 查询点赞数量
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount", likeCount);
+
+        return "/site/profile";
     }
 }
