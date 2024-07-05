@@ -1,5 +1,6 @@
 package com.nowcoder.community.controller;
 
+import com.nowcoder.community.annotation.LoginRequired;
 import com.nowcoder.community.entity.Message;
 import com.nowcoder.community.entity.Page;
 import com.nowcoder.community.entity.User;
@@ -29,6 +30,7 @@ public class MessageController {
     @Autowired
     private UserService userService;
 
+    @LoginRequired
     @GetMapping("/letter/list")
     public String getLetterList(Model model, Page page) {
         User user = hostHolder.getUser();
@@ -66,6 +68,7 @@ public class MessageController {
         return "/site/letter";
     }
 
+    @LoginRequired
     @GetMapping("/letter/detail/{conversationId}")
     public String getLetterDetail(@PathVariable(name = "conversationId") String conversationId, Model model, Page page) {
         // 分页信息
@@ -102,6 +105,7 @@ public class MessageController {
         return "/site/letter-detail";
     }
 
+    // 获取到所有未读私信的id
     private List<Integer> getLetterIds(List<Message> letterList) {
         List<Integer> ids = new ArrayList<>();
 
@@ -115,6 +119,7 @@ public class MessageController {
         return ids;
     }
 
+    // 获取到私信的目标
     private User getLetterTarget(String conversationId) {
         String[] ids = conversationId.split("_");
         int id0 = Integer.parseInt(ids[0]);
@@ -127,6 +132,7 @@ public class MessageController {
         }
     }
 
+    @LoginRequired
     @PostMapping("/letter/send")
     @ResponseBody
     public String sendLetter(String toName, String content) {
