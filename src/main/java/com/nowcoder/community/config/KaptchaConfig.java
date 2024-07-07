@@ -10,7 +10,7 @@ import java.util.Properties;
 
 @Configuration
 public class KaptchaConfig {
-
+    // 验证码配置
     @Bean
     public Producer kaptchaProducer() {
         Properties properties = new Properties();
