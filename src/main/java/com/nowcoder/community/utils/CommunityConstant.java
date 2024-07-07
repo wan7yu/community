@@ -47,6 +47,8 @@ public interface CommunityConstant {
     // 主题类型：关注
     String TOPIC_FOLLOW = "follow";
 
+    // 主题类型：发帖
+    String TOPIC_PUBLISH = "publish";
 
     /*
     * 系统用户id

@@ -25,19 +25,13 @@ public class DiscussPostService {
         return discussPostMapper.selectDiscussPostRows(userId);
     }
 
-    public int addDiscussPost(int userId, String title, String content) {
-
-        DiscussPost post = new DiscussPost();
-
+    public int addDiscussPost(DiscussPost post) {
         // 转义HTML标记
-        post.setTitle(HtmlUtils.htmlEscape(title));
-        post.setContent(HtmlUtils.htmlEscape(content));
+        post.setTitle(HtmlUtils.htmlEscape(post.getTitle()));
+        post.setContent(HtmlUtils.htmlEscape(post.getContent()));
         // 过滤敏感词
         post.setTitle(sensitiveFilter.filter(post.getTitle()));
         post.setContent(sensitiveFilter.filter(post.getContent()));
-
-        post.setUserId(userId);
-        post.setCreateTime(new Date());
 
         return discussPostMapper.insertDiscussPost(post);
     }
