@@ -171,8 +171,8 @@ public class MessageController implements CommunityConstant {
 
         // 查询评论类通知
         Message message = messageService.findLatestNotice(user.getId(), TOPIC_COMMENT);
-        Map<String, Object> messageVo = new HashMap<>();
         if (message != null) {
+            Map<String, Object> messageVo = new HashMap<>();
             messageVo.put("message", message);
 
             String content = HtmlUtils.htmlUnescape(message.getContent());
@@ -194,8 +194,8 @@ public class MessageController implements CommunityConstant {
 
         // 查询点赞类通知
         message = messageService.findLatestNotice(user.getId(), TOPIC_LIKE);
-        messageVo = new HashMap<>();
         if (message != null) {
+            Map<String, Object> messageVo = new HashMap<>();
             messageVo.put("message", message);
 
             String content = HtmlUtils.htmlUnescape(message.getContent());
@@ -217,8 +217,8 @@ public class MessageController implements CommunityConstant {
 
         // 查询关注类通知
         message = messageService.findLatestNotice(user.getId(), TOPIC_FOLLOW);
-        messageVo = new HashMap<>();
         if (message != null) {
+            Map<String, Object> messageVo = new HashMap<>();
             messageVo.put("message", message);
 
             String content = HtmlUtils.htmlUnescape(message.getContent());
