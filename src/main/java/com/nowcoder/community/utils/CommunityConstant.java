@@ -15,6 +15,7 @@ public interface CommunityConstant {
     /*
      * 关于登录凭证的常量
      * */
+
     // 默认状态的登录凭证的过期时间
     int DEFAULT_EXPIRED_SECONDS = 3600 * 24; // 1天
     // 记住状态的登录凭证的过期时间
@@ -50,6 +51,9 @@ public interface CommunityConstant {
     // 主题类型：发帖
     String TOPIC_PUBLISH = "publish";
 
+    // 主题类型：删贴
+    String TOPIC_DELETE = "delete";
+
     /*
     * 系统用户id
     * */
@@ -67,4 +71,27 @@ public interface CommunityConstant {
 
     // 权限：版主
     String AUTHORITY_MODERATOR = "moderator";
+
+    /*
+     * 帖子类型常量
+     * */
+
+    // 帖子类型：0：普通帖子
+    int POST_TYPE_NORMAL = 0;
+
+    // 帖子类型：1：置顶帖子
+    int POST_TYPE_TOP = 1;
+
+    /*
+     * 帖子状态常量
+     * */
+
+    // 帖子状态: 0：正常
+    int POST_STATUS_NORMAL = 0;
+
+    // 帖子状态: 1：加精
+    int POST_STATUS_WONDERFUL = 1;
+
+    // 帖子状态: 2：删除
+    int POST_STATUS_DELETE = 2;
 }

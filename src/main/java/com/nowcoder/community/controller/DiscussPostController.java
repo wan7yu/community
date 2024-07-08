@@ -154,4 +154,55 @@ public class DiscussPostController implements CommunityConstant {
 
         return "/site/discuss-detail";
     }
+
+    // 帖子置顶-只有版主能够置顶
+    @PostMapping("/top")
+    @ResponseBody
+    public String setTop(int id) {
+        discussPostService.updateType(id, POST_TYPE_TOP);
+
+        // 覆盖掉Elasticsearch中的原数据（因为数据发送变化所以要触发发帖事件）
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id);
+        eventProducer.fireEvent(event);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+    // 帖子加精-只有版主能够加精
+    @PostMapping("/wonderful")
+    @ResponseBody
+    public String setWonderful(int id) {
+        discussPostService.updateStatus(id, POST_STATUS_WONDERFUL);
+
+        // 覆盖掉Elasticsearch中的原数据（因为数据发送变化所以要触发发帖事件）
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id);
+        eventProducer.fireEvent(event);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+    // 删除帖子-只有管理员能够删除帖子
+    @PostMapping("/delete")
+    @ResponseBody
+    public String setDelete(int id) {
+        discussPostService.updateStatus(id, POST_STATUS_DELETE);
+
+        // 覆盖掉Elasticsearch中的原数据（因为数据发送变化所以要触发删贴事件）
+        Event event = new Event()
+                .setTopic(TOPIC_DELETE)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(id);
+        eventProducer.fireEvent(event);
+
+        return CommunityUtil.getJSONString(0);
+    }
 }

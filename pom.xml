@@ -119,6 +119,12 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!--thymeleaf整合springsecurity依赖-->
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
