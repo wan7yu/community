@@ -1,0 +1,140 @@
+spring:
+  application:
+    name: community
+  # ThymeleafProperties
+  thymeleaf:
+    cache: false
+  # 数据库驱动
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/community?characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong
+    username: root
+    password: 123456
+    # 数据库连接池类型
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+      idle-timeout: 30000
+  # 邮箱配置
+  mail:
+    host: smtp.sina.cn
+    port: 465
+    username: 18770037080m@sina.cn
+    password: fb0a7261c987f13c
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+  # redis配置
+  redis:
+    database: 11
+    host: localhost
+    port: 6379
+  # kafka配置
+  kafka:
+    # 服务器地址
+    bootstrap-servers:  localhost:9092
+    consumer:
+      # 消费者组
+      group-id: community-consumer-group
+      # 是否自动提交偏移量
+      enable-auto-commit: true
+      # 自动提交间隔
+      auto-commit-interval: 3000
+  data:
+    # Elasticsearch配置
+    elasticsearch:
+      cluster-name: nowcoder
+      cluster-nodes: 127.0.0.1:9300
+      repositories:
+        enabled: true
+  task:
+    # TaskExecutionProperties
+    execution:
+      pool:
+        # 线程数量
+        core-size: 5
+        # 线程不足时，最大扩展线程数
+        max-size: 15
+        # 当扩展也不足时，使用队列存储任务，队列大小
+        queue-capacity: 100
+    # TaskSchedulingProperties
+    scheduling:
+      pool:
+        size: 5
+  # QuartzProperties
+  quartz:
+    # 存储方式
+    job-store-type: jdbc
+    # 调度器名称
+    scheduler-name: communityScheduler
+    properties:
+      org:
+        quartz:
+          scheduler:
+            # 调度器实例Id自动生成
+            instanceId: AUTO
+          jobStore:
+            # 存储类
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            # 驱动类
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            # 采用集群方式
+            isClustered: true
+          threadPool:
+            # 线程池类
+            class:  org.quartz.simpl.SimpleThreadPool
+            # 线程数
+            threadCount: 5
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size:  10MB
+
+community:
+  path:
+    domain: http://localhost:8080
+    upload: d:/Code/upload
+
+server:
+  servlet:
+    context-path: /community
+
+# mybatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  # 实体类路径
+  type-aliases-package: com.nowcoder.community.entity
+  configuration:
+    # 数据库表字段主键id自增，自动生成
+    use-generated-keys: true
+    # mybatis驼峰映射
+    map-underscore-to-camel-case: true
+
+# 日志级别变为debug
+logging:
+  level:
+    com.nowcoder.community: debug
+#  file: D:/Code/Log/nowcoder/community.log
+
+# 网页转长图和pdf
+wk:
+  image:
+    command: D:/develop/wkhtmltopdf/bin/wkhtmltoimage
+    storage: D:/develop/data/wk-images
+
+# 七牛云服务器
+qiniu:
+  key:
+    access: 8MYiVbVZy10qiEqjMLY_X7RBEoCW6t6gCWqWaRJ8
+    secret: Jl-xAQvRnvkNCt9OQBc0D1_4WqkTDfjR5ULtZR8a
+  bucket:
+    header:
+      name: community-header113
+      url: http://sge2wd6nc.hn-bkt.clouddn.com
+    share:
+      name: community-share113
+      url: http://sge28fjxm.hn-bkt.clouddn.com
