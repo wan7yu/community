@@ -54,6 +54,9 @@ public interface CommunityConstant {
     // 主题类型：删贴
     String TOPIC_DELETE = "delete";
 
+    // 主题类型：分享
+    String TOPIC_SHARE = "share";
+
     /*
     * 系统用户id
     * */
