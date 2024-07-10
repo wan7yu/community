@@ -13,6 +13,8 @@ public class RedisKeyUtil {
     private static final String PREFIX_UV = "uv";
     private static final String PREFIX_DAU = "dau";
     private static final String PREFIX_POST = "post";
+    private static final String PREFIX_POST_LIST_CACHE = "post:list:cache";
+    private static final String PREFIX_POST_ROWS_CACHE = "post:rows:cache";
 
     // 某个实体的赞
     // like:entity:entityType:entityId -> set(userId)
@@ -48,7 +50,7 @@ public class RedisKeyUtil {
         return PREFIX_TICKET + SPLIT + ticket;
     }
 
-    // 用户消息对应key
+    // 用户信息对应key
     public static String getUserKey(int userId) {
         return PREFIX_USER + SPLIT + userId;
     }
@@ -76,5 +78,15 @@ public class RedisKeyUtil {
     // 统计帖子分数的key
     public static String getPostScoreKey() {
         return PREFIX_POST + SPLIT + "score";
+    }
+
+    // 首页热贴列表缓存
+    public static String getPostListCacheKey(int offset, int limit) {
+        return PREFIX_POST_LIST_CACHE + SPLIT + offset + SPLIT + limit;
+    }
+
+    // 首页帖子行数缓存
+    public static String getPostRowsCacheKey() {
+        return PREFIX_POST_ROWS_CACHE;
     }
 }

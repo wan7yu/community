@@ -138,3 +138,9 @@ qiniu:
     share:
       name: community-share113
       url: http://sge28fjxm.hn-bkt.clouddn.com
+
+# caffeine配置
+caffeine:
+  posts:
+    max-size: 15
+    expire-seconds: 180
