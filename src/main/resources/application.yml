@@ -144,3 +144,10 @@ caffeine:
   posts:
     max-size: 15
     expire-seconds: 180
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, beans, loggers, database
+        exclude: caches
